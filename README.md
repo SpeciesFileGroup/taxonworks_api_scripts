@@ -39,7 +39,10 @@ Some scripts have places to include them in the file itself, in a variable, or c
 * You alone are resonsible for the outcome of running a script.
 
 ## Contributing
-* Code goes in `/src/`, organized by language, then API version.
+* Code goes in `/src/`, organized by language, then API version.  For example:
+  * `/src/ruby/v1/`
+  * `/src/r/v1/`
+  * `/src/python/v1`
 * Filename has no spaces, leads with an issue number if available, and spells out the basic goal, e.g. `1234_get_synonyms_from_user_input.rb` 
 * Use a lot of documentation inside the script.
   - Consider including a VERSION in the leading comments of the script
