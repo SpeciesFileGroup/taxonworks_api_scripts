@@ -24,10 +24,13 @@ req_bioass_sandfly_query = req_bioass_sandfly %>%
   req_url_query(
     "subject_taxon_name_id[]"=474243) %>%
   req_url_query(
-    "biological_relationship_id[]"=13) %>%
+    "biological_relationship_id[]"=8,
+    "biological_relationship_id[]"=12,
+    "biological_relationship_id[]"=13,
+    "biological_relationship_id[]"=14,
+    "biological_relationship_id[]"=10) %>%
   req_url_query(
     taxon_name_id_mode="true")
-#integer array in httr2? I post an issue https://github.com/r-lib/httr2/issues/436
 
 #Provide access token via header
 req_bioass_sandfly_query_auth = req_bioass_sandfly_query %>%
