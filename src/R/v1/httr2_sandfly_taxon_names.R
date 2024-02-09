@@ -1,5 +1,5 @@
 #reference: https://httr2.r-lib.org/articles/wrapping-apis.html - https://www.tidyverse.org/blog/2023/11/httr2-1-0-0/ - https://github.com/melissavanbussel/YouTube-Tutorials/blob/main/httr2/httr2_examples.R
-#objectives: get a taxon_names_id and other attributes of a taxon name, from endpoint taxon_names
+#objectives: get a taxon_names_id and other attributes of a taxon name, from endpoint taxon_names in a csv file
 library(httr2)
 library(tidyverse)
 
@@ -22,8 +22,7 @@ req_taxonnames_sandfly = request(base_url_taxonworks_sandfly) %>%
 req_taxonnames_sandfly_query = req_taxonnames_sandfly %>%
   req_url_query(
     validity="true",
-    name_exact="true",
-    name="Eurytoma morio")
+    name_exact="true")
 
 #Provide access token via header
 req_taxonnames_sandfly_query_auth = req_taxonnames_sandfly_query %>%
@@ -31,17 +30,24 @@ req_taxonnames_sandfly_query_auth = req_taxonnames_sandfly_query %>%
     'Authorization'=paste0('Token ',access_token_taxonworks_sandfly)
   )
 
-#Perform response
-resp_perform_taxonnames_sandfly = req_taxonnames_sandfly_query_auth %>%
-  req_perform()
-resp_perform_taxonnames_sandfly_json = resp_perform_taxonnames_sandfly |> 
-  resp_body_json()
+library(readr)
+identificati <- read_csv("lista_identificati.csv")
+lista_identificati = as_vector(identificati$name)
+#names=lapply(lista_identificati, function(lista_identificati) paste0("name=",lista_identificati))
 
-resp_perform_taxonnames_sandfly_string = resp_perform_taxonnames_sandfly |> 
-  resp_body_string()
+reqs = lapply(lista_identificati, function(lista_identificati) req_url_query(req_taxonnames_sandfly_query_auth,name=lista_identificati))
+
+#Perform responses
+resps = reqs %>%
+  req_perform_sequential()
+
+resp_perform_taxonnames_sandfly_string = resps |> resps_successes() |> resps_data(\(resp) resp_body_string(resp))
 
 #Transform to dataframe
 library(jsonlite)
-resp_perform_taxonnames_sandfly_dataframe = fromJSON(resp_perform_taxonnames_sandfly_string) %>% as.data.frame()
+resp_perform_taxonnames_sandfly_dataframe = lapply(resp_perform_taxonnames_sandfly_string, function(x) fromJSON(x))
+library(dplyr)
+dataframe = bind_rows(resp_perform_taxonnames_sandfly_dataframe)
+
 
 
