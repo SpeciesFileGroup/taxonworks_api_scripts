@@ -41,16 +41,12 @@ tw_projects()
 # 3                            Lepindex (redacted)
 # 4                  3i Auchenorrhyncha cmLdk2o_O1-OYSjAxjqQfQ
 
-# If the project that you would like to access is not open and you are a project member, you can get the 
-# secret project token on the project settings page accessed with the Project link in the upper right corner of 
-# the TaxonWorks web interface.
-
-# Set the API project token
+# Set the API project token which you can find at: https://sandbox.taxonworks.org/api/v1 (replacing the sandbox hostname with the one you are using)
 TW_PROJECT_TOKEN = "cmLdk2o_O1-OYSjAxjqQfQ"
 
 # Set your API user token, which you can find in the Account tab in the top right corner of the TaxonWorks web interface.
-# The user token is optional for most endpoints on open projects, but may be required if you are accessing a private project.
-TW_USER_TOKEN = "Yb3cAtwBapWzsMeXNX7N5q"
+# The user token is optional for most endpoints
+TW_USER_TOKEN = "YfaketwBapWzsMeXNX7N5q"
 
 
 
@@ -101,15 +97,19 @@ tw_biological_associations(subresource = "simple")
 # # ℹ Use `print(n = ...)` to see more rows
 
 
-# To get all results from the simple biological associations table, you can fetch each page and use rbind to merge them into a single table in R:
+# To get all results from the simple biological associations table, you can fetch each page and use the dplyr package's bind_rows() function to merge them into a single table in R:
+install.packages("dplyr")
+library("dplyr") 
+# Learn more on dplyr at: https://datacarpentry.org/R-genomics/04-dplyr.html
+
 page <- 1
 per <- 500
-res <- tw_biological_associations(subresource = "simple", page = page, per = per)
+res <- tw_biological_associations(subresource = "simple", csv = FALSE, page = page, per = per)
 results <- res$data
 while (page < res$meta$total_pages) {
   page <- page + 1
-  res <- tw_biological_associations(subresource = "simple", page = page, per = per)
-  results <- rbind(results, res$data)
+  res <- tw_biological_associations(subresource = "simple", csv = FALSE, page = page, per = per)
+  results <- bind_rows(results, res$data)
 }
 
 # The results variable now should contain all of the simple biological associations records
