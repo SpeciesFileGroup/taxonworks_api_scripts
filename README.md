@@ -5,6 +5,8 @@ All code here is considered to be a TaxonWorks Labs project.
 
 <img width="50" height="50" alt="TaxonWorks Labs" src="https://github.com/user-attachments/assets/aed6a9d3-e737-4954-861c-99dfc3f89040" />
 
+## Organization
+
 Code is in `src/`. Organized by language, then API version.
 
 _Note that API version 1 is unstaable, and should be treated as API version 0 semantically._
